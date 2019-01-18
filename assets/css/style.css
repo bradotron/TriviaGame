@@ -1,40 +1,171 @@
 body {
-    display: grid;
-  
-    min-height: 100vh;
-  
-    justify-content: center;
-    align-content: center;
-  
-    /* background-image: url("../images/Death-Star-Backgrounds.jpg");
-  
-    background-repeat: no-repeat;
-    background-size: cover; */
-  }
+  display: grid;
 
-  .game-container {
-    background-color: rgba(40, 40, 40, 0.8);
-    min-width: 50vw;
-    text-align: center;
-  }
-  
-  .answer {
-    cursor: default;
-    background-color: rgba(40, 40, 40, 1);
-    color: white;
-    transition: background-color 0.25s ease-in-out;
-  }
-  .answer:hover {
-    background-color: rgba(40, 40, 40, 0.5);
-  }
-  .answer:active {
-    background-color: rgba(0, 0, 0, 1);
-  }
+  min-height: 100vh;
 
-  .slow-fade {
-    transition: opacity 2s ease-in;
-  }
+  justify-content: center;
+  align-content: center;
 
-  .test {
-    background-color: black;
-  }
+  background: linear-gradient(
+      135deg,
+      #5e5e5e 21px,
+      #AEAEAE 22px,
+      #AEAEAE 24px,
+      transparent 24px,
+      transparent 67px,
+      #AEAEAE 67px,
+      #AEAEAE 69px,
+      transparent 69px
+    ),
+    linear-gradient(
+        225deg,
+        #5e5e5e 21px,
+        #AEAEAE 22px,
+        #AEAEAE 24px,
+        transparent 24px,
+        transparent 67px,
+        #AEAEAE 67px,
+        #AEAEAE 69px,
+        transparent 69px
+      )
+      0 64px;
+  background-color: #5e5e5e;
+  background-size: 64px 128px;
+  color: white;
+
+  font-family: 'Open Sans', sans-serif;
+}
+
+.game-container {
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+
+  grid-template-columns: auto;
+}
+
+.play-button {
+  width: 20vh;
+  height: 20vh;
+  line-height: 20vh;
+  border-radius: 50%;
+  background-image: radial-gradient( #640D14, #800E13, #D91E36 );
+  box-shadow: #EDEDED 0px 2px 0;
+
+  text-transform: uppercase;
+  font-size: 5vh;
+  font-weight: 800;
+  letter-spacing: -3px;
+  user-select: none;
+}
+
+.play-button:active {
+  background-image: radial-gradient(#D91E36, #800E13 );
+  box-shadow: #EDEDED 0px 1px 0;
+}
+
+.mh-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mb-2 {
+  margin-bottom: 2vh;
+}
+
+.game-instructions,
+.game-timer,
+.game-question,
+.answer {
+  cursor: default;
+  user-select: none;
+  display: flex;
+  flex-wrap: nowrap;
+
+  text-align: center;
+  background-color: rgba(33, 33, 33, 0.9);
+}
+
+.game-title {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+
+  font-family: 'Open Sans', sans-serif;
+  color: #333333;
+  text-transform: uppercase;
+  font-size: 5rem;
+  font-weight: 800;
+  letter-spacing: -3px;
+  text-shadow: #EDEDED 3px 2px 0;
+}
+
+.game-instructions {
+  font-size: 1.75rem;
+  text-shadow: #5e5e5e 1px 1px 0;
+  border-radius: 2vh;
+  padding: 2vh;  
+}
+
+.game-timer {
+  font-size: 2rem;
+  text-shadow: #5e5e5e 1px 1px 0;
+  border-radius: 2vh;
+  padding: 2vh;  
+}
+
+.game-question {
+  font-size: 1.5rem;
+  text-shadow: #5e5e5e 2px 2px 0;
+  border-radius: 2vh;
+  padding: 2vh;  
+}
+
+.answer {
+  text-shadow: #5e5e5e 1px 1px 0;
+  border-radius: 1vh;
+  padding: 1vh;  
+}
+
+.answer-hover:hover {
+  background-color: rgba(59, 59, 59, 0.9);
+}
+
+.answer-hover:active {
+  background-color: rgba(238, 238, 238, 0.9);
+}
+
+.correct {
+  background-color: rgba(29, 51, 35, 0.9);
+}
+
+.incorrect {
+  background-color: rgba(64, 13, 14, 0.9);
+}
+
+.slow-fade {
+  transition: opacity 2s ease-in;
+}
+
+.text-normal {
+	font-size: 1.25rem;
+}
+
+.text-medium {
+	font-size: 1.75rem;
+}
+
+.text-large {
+	font-size: 3rem;
+}
+
+.text-title {
+	font-size: 5rem;
+}
+
+.text-center {
+  text-align: center;
+}

@@ -1,4 +1,4 @@
-const defaultQuestionTime = 15;
+const defaultQuestionTime = 10;
 
 $(function() {
   //document ready
@@ -13,18 +13,28 @@ $(function() {
   let currentQuestion = {};
   let myTimer;
 
-  // this function creates a reset button and appends it to the #game div
-  let createResetButton = function() {
-    let resetButton = $("<button>");
-    $(resetButton).text("Reset");
-    $(resetButton).on("click", resetGame);
-    $("#game").append(resetButton);
+  let splashScreen = function() {
+    // this is the screen that will be displayed to the user when they open the webpage
+    // create a snazzy title
+    //<div class="game-title mb-2">Online Bar Trivia!</div>
+    //<div class="play-button text-center mh-auto mb-2">Play!</div>
+    let myTitle = $("<div>")
+      .addClass("game-title mb-2")
+      .text("Welcome to Online Bar Trivia!");
+    // create a snazzy play button
+    let playBtn = $("<div>")
+      .addClass("play-button text-center mh-auto mb-2")
+      .text("Play");
+    playBtn.on("click", resetGame);
+
+    $(".game-container").append(myTitle);
+    $(".game-container").append(playBtn);
   };
 
   // reset the game function
   let resetGame = function() {
     // this function will clear the game-container
-    $("#game").empty();
+    $(".game-container").empty();
 
     // initialize the game scope variables
     questionNumber = 0;
@@ -32,12 +42,17 @@ $(function() {
     incorrectTally = 0;
     questionTime = defaultQuestionTime;
 
-    // then add a title splash that says Let's Play Trivia!!! or something neat
-    $("#game").append("<h1>Welcome to Trivialandgame!!!</h1>");
+    // Tell the user that there will be 5 questions, 15 seconds to answer each.
+    let myMessage = $("<div>")
+      .addClass("game-instructions mh-auto mb-2")
+      .text(
+        `You will be asked 5 questions. You have ${questionTime} seconds to answer each question. Trivia ahead...`
+      );
+    $(".game-container").append(myMessage);
 
     // populate the questions array from the questionArchive
     $.ajax({
-      url: "https://opentdb.com/api.php?amount=10&type=multiple"
+      url: "https://opentdb.com/api.php?amount=5&type=multiple"
     }).then(function(response) {
       questions = response.results;
       // here's what each result has as key:value
@@ -50,53 +65,68 @@ $(function() {
 
       // tell the user what the game is: that they will have XX seconds to answer each question
       // and it's Elon Musk trivia
-      $("#game").append(
-        $("<p>").html(
-          "You will have " +
-            questionTime +
-            " seconds to answer a question. The questions are all multiple choice. I hope you have brushed up on your random knowledge!"
-        )
-      );
-      $("#game").append("<p>Press Play to Begin!</p>");
-
-      // add a play button that starts the game
-      $("#game").append(
-        $("<button>")
-          .text("Play!")
-          .on("click", triviaGame)
-      );
+      setTimeout(triviaGame, 3000);
     });
-
-    //initializeQuestions();
   };
 
   let triviaGame = function() {
     // clear the game div
-    $("#game").empty();
+    $(".game-container").empty();
 
     questionNumber++;
-    if (questionNumber <= 5) {
-      // max questions is 5
+    // generate the question
+    currentQuestion = generateQuestion();
+    if (currentQuestion != null) {
+      //console.log(currentQuestion.question);
+      // populate the game with the question and possible answers
 
-      // generate the question
-      currentQuestion = generateQuestion();
-      if (currentQuestion != null) {
-        //console.log(currentQuestion.question);
-        // populate the div with the question and possible answers
-        $("#game").append(generateQuestionHtml(currentQuestion));
+      // have a question heading that lists the question number
+      $(".game-container").append(
+        $("<div>")
+          .addClass("game-instructions mh-auto mb-2")
+          .text(`Question Number ${questionNumber}!`)
+      );
+      // now write the question
+      $(".game-container").append(
+        $("<div>")
+          .addClass("game-question mh-auto mb-2")
+          .html(currentQuestion.question)
+      );
 
-        // add an on click event for the class answers
-        $(".answer").on("click", questionSubmitted);
-
-        // create the timer
-        questionTime = defaultQuestionTime;
-        startTimer();
-      } else {
-        // out of questions
-        gameOver();
+      // create answers
+      let correctIndex = Math.floor(Math.random() * 4);
+      for (let i = 0; i < 4; i++) {
+        let myAnswer = $("<div>").addClass("answer answer-hover mh-auto mb-2");
+        if (i == correctIndex) {
+          $(myAnswer).html(currentQuestion.correct_answer);
+        } else {
+          $(myAnswer).html(
+            currentQuestion.incorrect_answers.splice(
+              Math.floor(
+                Math.random() * currentQuestion.incorrect_answers.length
+              ),
+              1
+            )[0]
+          );
+        }
+        $(".game-container").append(myAnswer);
       }
+
+      questionTime = defaultQuestionTime;
+      $(".game-container").append(
+        $("<div>")
+          .addClass("game-timer mh-auto mb-2")
+          .text(`Time: ${questionTime}`)
+      );
+
+      // add an on click event for the class answers
+      $(".answer").on("click", questionSubmitted);
+
+      // create the timer
+
+      startTimer();
     } else {
-      // game over
+      // out of questions
       gameOver();
     }
   };
@@ -113,49 +143,28 @@ $(function() {
     }
   };
 
-  // generate the question form
-  let generateQuestionHtml = function(qtn) {
-    let myDiv = $("<div>");
-
-    // have a question heading that lists the question number
-    myDiv.append($("<h1>").text("Question " + questionNumber + "!"));
-    // now write the question
-    myDiv.append($("<p>").html(qtn.question));
-
-    // create answers
-    let correctIndex = Math.floor(Math.random() * 4);
-    for (let i = 0; i < 4; i++) {
-      let myAnswer = $("<div>").addClass("answer");
-      if (i == correctIndex) {
-        $(myAnswer).html(currentQuestion.correct_answer);
-      } else {
-        $(myAnswer).html(
-          currentQuestion.incorrect_answers.splice(
-            Math.floor(
-              Math.random() * currentQuestion.incorrect_answers.length
-            ),
-            1
-          )[0]
-        );
-      }
-      myDiv.append(myAnswer);
-    }
-
-    return myDiv;
-  };
-
   let countDown = function() {
     questionTime--;
     //console.log("counting down " + questionTime);
+    $(".game-timer").text(`Time: ${questionTime}`);
 
     if (questionTime <= 0) {
-      // out of time wrong answer baby
-      // TODO: Tell the user that they ran out of time
-
-      wrongAnswer();
-
       // stop the timer
       stopTimer();
+      // out of time wrong answer baby
+      $(".game-timer").text(`Time's Up!`);
+      $(".game-timer").addClass("incorrect");
+      wrongAnswer();
+
+      let answers = $(".game-container").children(".answer");
+      for (let i = 0; i < answers.length; i++) {
+        $(answers[i]).removeClass("answer-hover");
+        if ($(answers[i]).html() == currentQuestion.correct_answer) {
+          $(answers[i]).addClass("correct");
+        } else {
+          $(answers[i]).addClass("incorrect");
+        }
+      }
     }
   };
 
@@ -170,21 +179,28 @@ $(function() {
   let questionSubmitted = function(event) {
     // remove the click event from .answer (you only get one shot)
     $(".answer").off("click");
-    
+
     // stop the timer
     stopTimer();
 
-    // TODO: highlight the correct answer in green
-    // TODO: highlight the wrong answers in red
+    let answers = $(".game-container").children(".answer");
+    for (let i = 0; i < answers.length; i++) {
+      $(answers[i]).removeClass("answer-hover");
+      if ($(answers[i]).html() == currentQuestion.correct_answer) {
+        $(answers[i]).addClass("correct");
+      } else {
+        $(answers[i]).addClass("incorrect");
+      }
+    }
 
     // get the text from the answer
     if ($(this).html() == currentQuestion.correct_answer) {
+      $(".game-instructions").text("That's Correct!");
       correctAnswer();
     } else {
+      $(".game-instructions").text("WRONG!");
       wrongAnswer();
     }
-
-    // TODO: display a message of correct/false that fades after a few seconds
   };
 
   let wrongAnswer = function() {
@@ -214,16 +230,28 @@ $(function() {
     // stop the timer
     stopTimer();
 
-    // TODO: show the user the score
-    console.log("Correct: " + correctTally);
-    console.log("Wrong: " + incorrectTally);
-    // add a reset button
-    createResetButton();
+    $(".game-container").append();
+
+    $(".game-container").append(
+      $("<div>")
+        .addClass("game-instructions mh-auto mb-2")
+        .html(
+          `Your Score<br>Correct: ${correctTally} <br>Incorrect: ${incorrectTally}`
+        )
+    );
+
+    // add the fun play button back
+    $(".game-container").append(
+      $("<div>")
+        .addClass("play-button text-center mh-auto mb-2")
+        .text("Play")
+        .on("click", resetGame)
+    );
   };
 
   //==============================================================================================//
   // this is where I put the code that runs when the document loads...its on the bottom so all my
   // functions and stuff are available
   // console.log("hello world");
-  resetGame();
+  splashScreen();
 });
