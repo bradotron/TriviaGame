@@ -1,0 +1,40 @@
+body {
+    display: grid;
+  
+    min-height: 100vh;
+  
+    justify-content: center;
+    align-content: center;
+  
+    /* background-image: url("../images/Death-Star-Backgrounds.jpg");
+  
+    background-repeat: no-repeat;
+    background-size: cover; */
+  }
+
+  .game-container {
+    background-color: rgba(40, 40, 40, 0.8);
+    min-width: 50vw;
+    text-align: center;
+  }
+  
+  .answer {
+    cursor: default;
+    background-color: rgba(40, 40, 40, 1);
+    color: white;
+    transition: background-color 0.25s ease-in-out;
+  }
+  .answer:hover {
+    background-color: rgba(40, 40, 40, 0.5);
+  }
+  .answer:active {
+    background-color: rgba(0, 0, 0, 1);
+  }
+
+  .slow-fade {
+    transition: opacity 2s ease-in;
+  }
+
+  .test {
+    background-color: black;
+  }
