@@ -54,6 +54,7 @@ $(function() {
     $.ajax({
       url: "https://opentdb.com/api.php?amount=5&type=multiple"
     }).then(function(response) {
+      
       questions = response.results;
       // here's what each result has as key:value
       // category: "General Knowledge"
@@ -149,6 +150,8 @@ $(function() {
     $(".game-timer").text(`Time: ${questionTime}`);
 
     if (questionTime <= 0) {
+      // no more clicking
+      $(".answer").off("click");
       // stop the timer
       stopTimer();
       // out of time wrong answer baby
