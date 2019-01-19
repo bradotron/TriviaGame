@@ -79,7 +79,6 @@ $(function() {
     currentQuestion = generateQuestion();
     if (currentQuestion != null) {
       //console.log(currentQuestion.question);
-      // populate the game with the question and possible answers
 
       // have a question heading that lists the question number
       $(".game-container").append(
@@ -95,7 +94,10 @@ $(function() {
       );
 
       // create answers
+
       let correctIndex = Math.floor(Math.random() * 4);
+
+      // TODO: add true/false functionality...there will only be 2 total answers
       for (let i = 0; i < 4; i++) {
         let myAnswer = $("<div>").addClass("answer answer-hover mh-auto mb-2");
         if (i == correctIndex) {
@@ -152,13 +154,13 @@ $(function() {
     if (questionTime <= 0) {
       // no more clicking
       $(".answer").off("click");
-      // stop the timer
       stopTimer();
+
       // out of time wrong answer baby
       $(".game-timer").text(`Time's Up!`);
       $(".game-timer").addClass("incorrect");
-      wrongAnswer();
 
+      // I need to compare all the answers to the correct answer, then change background colors based on correct/incorrect
       let answers = $(".game-container").children(".answer");
       for (let i = 0; i < answers.length; i++) {
         $(answers[i]).removeClass("answer-hover");
@@ -168,6 +170,8 @@ $(function() {
           $(answers[i]).addClass("incorrect");
         }
       }
+      // user got the wrong answer...by running out of time
+      wrongAnswer();
     }
   };
 
@@ -208,8 +212,6 @@ $(function() {
 
   let wrongAnswer = function() {
     // stop the timer
-    stopTimer();
-
     incorrectTally++;
 
     // go to the next question after 3000 milliseconds
@@ -217,9 +219,6 @@ $(function() {
   };
 
   let correctAnswer = function() {
-    // stop the timer
-    stopTimer();
-
     correctTally++;
     // go to the next question after 3000 milliseconds
     nextQuestion();
