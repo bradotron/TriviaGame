@@ -11,5 +11,17 @@
 
 # File Structure
 ```
+|-- ProjectRoot
+    |-- index.html
+    |-- README.md
+    |-- assets
+    |   |-- css
+    |   |   |-- reset.css
+    |   |   |-- style.css
+    |   |-- javascript
+    |       |-- app.js
+    |-- Images
+        |-- 1-basic.jpg
+        |-- 2-advanced.jpg
 
 ```
